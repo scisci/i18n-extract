@@ -1,19 +1,18 @@
 package main
 
 import (
-	"fmt"
-	"go/ast"
-	"os"
-	//"go/build"
 	"encoding/json"
 	"flag"
+	"fmt"
+	"go/ast"
 	"go/importer"
 	"go/parser"
 	"go/token"
 	"go/types"
+	"os"
 	"path/filepath"
+	"strings"
 	//"io/ioutil"
-
 	//"github.com/maximilien/i18n4go/common"
 )
 
@@ -83,7 +82,8 @@ func (b *builder) extractString(f *ast.File, info *types.Info, fset *token.FileS
 		case *ast.CallExpr:
 			if len(x.Args) > 0 {
 				tc := info.TypeOf(x.Fun)
-				if tc.String() == "github.com/nicksnyder/go-i18n/i18n.TranslateFunc" {
+				//fmt.Println(tc.String())
+				if strings.HasSuffix(tc.String(), "github.com/nicksnyder/go-i18n/i18n.TranslateFunc") {
 					str := x.Args[0].(*ast.BasicLit)
 					b.str = append(b.str, str.Value[1:len(str.Value)-1])
 					//fmt.Printf("got string %s\n", str.Value[1:len(str.Value)-1])
